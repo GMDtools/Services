@@ -1,4 +1,4 @@
-FROM docker.io/serversideup/php/8.5-cli-alpine AS backend
+FROM docker.io/serversideup/php:8.5-cli-alpine AS backend
 
 WORKDIR /var/www/html
 
@@ -6,7 +6,7 @@ COPY composer.json composer.lock ./
 
 RUN composer install --no-dev --no-scripts --optimize-autoloader --prefer-dist
 
-FROM docker.io/serversideup/php/8.5-frankenphp-alpine
+FROM docker.io/serversideup/php:8.5-frankenphp-alpine
 
 WORKDIR /var/www/html
 
