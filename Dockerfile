@@ -1,13 +1,25 @@
-FROM ghcr.io/endless-spike-studio/endless-services-runtime:main
+FROM docker.io/serversideup/php/8.5-cli-alpine AS backend
 
-COPY . /app
+WORKDIR /var/www/html
 
-WORKDIR /app
+COPY composer.json composer.lock ./
 
-RUN composer install --no-dev
+RUN composer install --no-dev --no-scripts --optimize-autoloader --prefer-dist
 
-RUN php /app/artisan storage:link
+FROM docker.io/serversideup/php/8.5-frankenphp-alpine
 
-ENTRYPOINT ["php", "artisan", "octane:start", "--server", "frankenphp", "--host", "0.0.0.0"]
+WORKDIR /var/www/html
 
-EXPOSE 8000
+COPY --from=backend /var/www/html/vendor ./vendor
+
+COPY . .
+
+ENV SERVER_NAME=:80
+
+RUN mkdir -p ./resources/views
+
+ENV AUTORUN_ENABLED=true
+
+CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0"]
+
+EXPOSE 80
