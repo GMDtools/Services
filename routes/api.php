@@ -1,3 +1,3 @@
 <?php
 
-require_once __DIR__.'/../app/GeometryDashProxy/routes.php';
+require __DIR__ . '/../app/GeometryDashProxy/routes.php';
