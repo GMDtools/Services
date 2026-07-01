@@ -4,7 +4,7 @@ WORKDIR /var/www/html
 
 COPY composer.json composer.lock ./
 
-RUN composer install --no-dev --no-scripts --optimize-autoloader --prefer-dist
+RUN composer install --no-dev --no-scripts --optimize-autoloader --prefer-dist --ignore-platform-req=ext-bcmath
 
 FROM docker.io/serversideup/php:8.5-frankenphp-alpine
 
@@ -13,6 +13,8 @@ WORKDIR /var/www/html
 COPY --from=backend /var/www/html/vendor ./vendor
 
 COPY . .
+
+RUN install-php-extensions bcmath
 
 ENV SERVER_NAME=:80
 
